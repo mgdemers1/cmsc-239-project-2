@@ -1,14 +1,18 @@
 /* EDIT ANYTHING YOU WANT */
+* {
+ font-family: 'Tahoma';
+ background-color: #eee8d5;
+}
+
 .title {
   color: black;
-  font-family: Roboto-Black;
+  font-family: Impact !important;
   font-size: 36px;
   font-weight: bold;
 }
 
 .subtitle {
   color: black;
-  font-family: Roboto-Black;
   font-size: 12px;
   font-weight: semi-bold;
 }
@@ -35,6 +39,7 @@
 }
 
 .header {
+  font-family: 'Impact' !important;
   display: flex;
   flex-direction: column;
 }
@@ -45,7 +50,6 @@
 }
 
 .state-hex-label {
-  font-family: Roboto;
   font-size: 10px;
   pointer-events: none;
 }
@@ -94,8 +98,185 @@
   background: black;
   border-radius: 4px;
   color: white;
-  font-family: sans-serif;
+  font-family: Tahoma;
   font-size: 10px;
   padding: 6px;
   text-transform: uppercase;
+}
+
+.stream-controls {
+  padding: 5px 500px;
+}
+
+.pill-box {
+  display: flex;
+}
+
+.pad-only-sides {
+  padding: 0 20px;
+}
+
+.pill-box .artist-selector  {
+  border-bottom: 5px solid #eee8d5;
+  border-top: 5px solid #eee8d5;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.pill-box .artist-selector.selected  {
+  border-bottom: 5px solid #000;
+  border-top: 5px solid #000;
+}
+
+.pill-box .artist-selector.Kohh  {
+  border-bottom: 5px solid #7f64b9;
+  border-top: 5px solid #7f64b9;
+}
+
+.pill-box .artist-selector.Keith  {
+  border-bottom: 5px solid #80a954;
+  border-top: 5px solid #80a954;
+}
+
+.pill-box .artist-selector.Vince  {
+  border-bottom: 5px solid #c4793b;
+  border-top: 5px solid #c4793b;
+}
+
+.pill-box .artist-selector.Higher  {
+  border-bottom: 5px solid #bc466c;
+  border-top: 5px solid #bc466c;
+}
+
+.rv-xy-plot__axis__title .text {
+ color: black;
+}
+
+.slider-container {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.slider-container {
+  align-items: center;
+}
+
+.slider-container .flex {
+  width: 100%;
+}
+
+/* built on the super neat
+http://danielstern.ca/range.css/#/ */
+.slider-container .range-input-slider {
+  -webkit-appearance: none;
+  margin: 12.3px 0;
+  padding-right: 10px;
+  width: 100%;
+}
+.slider-container .range-input-slider:focus {
+  outline: none;
+}
+
+.slider-container .range-input-slider::-webkit-slider-runnable-track {
+  background: #000000;
+  border: 0.2px solid #010101;
+  border-radius: 1.3px;
+  cursor: pointer;
+  height: 8.4px;
+  width: 100%;
+}
+
+.slider-container .range-input-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #eee8d5;
+  border: 1px solid #000000;
+  border-radius: 14px;
+  cursor: pointer;
+  height: 33px;
+  margin-top: -12.5px;
+  width: 42px;
+}
+
+.slider-container .range-input-slider:focus::-webkit-slider-runnable-track {
+  background: #2e2e2e;
+}
+
+.slider-container .range-input-slider::-moz-range-track {
+  background: #000000;
+  border: 0.2px solid #010101;
+  border-radius: 1.3px;
+  cursor: pointer;
+  height: 8.4px;
+  width: 100%;
+}
+
+.slider-container .range-input-slider::-moz-range-thumb {
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 14px;
+  cursor: pointer;
+  height: 33px;
+  width: 42px;
+}
+
+.flux-controls {
+  padding: 1px 500px;
+  align-items: center;
+  text-align:center;
+}
+
+.flux-label {
+  text-align:center;
+  padding: 1px 500px;
+  font-weight: bold;
+}
+.slider-label {
+  text-align:center;
+  padding: 1px 500px;
+  font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
+}
+.date-button {
+  display:inline-block;
+  border-bottom: 5px solid #eee8d5;
+  border-top: 1px solid #eee8d5;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.flux-div {
+  width: 100%;
+  text-align: center;
+}
+
+.artist-flux {
+  display: inline-block;
+}
+
+.breakdown-div {
+  width: 100%;
+  text-align: center;
+}
+.flux-artist-breakdown {
+  display: inline-block;
+}
+
+.artist-breakdown {
+  display: inline-block;
+}
+
+.crosshair {
+  color:'black';
+}
+
+.breakdown-div .pill-box .artist-selector.selected  {
+  border-bottom: 5px solid #000;
+  border-top: 5px solid #000;
 }
