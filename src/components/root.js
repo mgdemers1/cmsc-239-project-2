@@ -4,7 +4,6 @@ import {stack, stackOffsetWiggle} from 'd3-shape';
 import {TEXT, ARTISTS} from '../constants'
 
 import StreamGraph from './streamgraph';
-import ScatterBrush from './brush_scatter';
 import ArtistButtons from './artist_buttons';
 import VisText from './text';
 import ArtistFlux from './artist_flux';
