@@ -1,32 +1,18 @@
 import React, {Component} from 'react';
-import {stack, stackOffsetWiggle} from 'd3-shape';
-import {hsl} from 'd3-color';
-import {
-  FlexibleWidthXYPlot,
-  XYPlot,
-  AreaSeries,
-  Hint,
-  VerticalGridLines,
-  HorizontalGridLines,
-  XAxis,
-  YAxis,
-  LineMarkSeries,
-  MarkSeries,
-  LineSeries,
-  Crosshair,
-  HeatmapSeries,
-  LabelSeries} from 'react-vis';
-import {stackData, artistColors, rotateArray, dateTicks, saturationScale} from '../utils';
-import {ARTISTS, REGIONS, ARTIST_COLORS} from '../constants';
+import {XYPlot, Hint, HorizontalGridLines, XAxis, YAxis, LineMarkSeries, Crosshair} from 'react-vis';
+import {artistColors, dateTicks} from '../utils';
+import {ANNOTATIONS} from '../constants';
 
-export default class FluxBreakdown extends Component {
+class FluxBreakdown extends Component {
   constructor() {
     super();
     this.state = {
-      crosshairValues: []
+      crosshairValues: [],
+      hover: null
     };
   }
 
+  // BASED ON: https://github.com/uber/react-vis/blob/master/showcase/axes/dynamic-crosshair.js
   _onNearestX = data => (value, {index}) => {
     this.setState({crosshairValues: data.filter((d, i) => i === index)});
   };
@@ -37,104 +23,71 @@ export default class FluxBreakdown extends Component {
 
   render() {
     const {data, artist, region, onChange, dateIdx} = this.props;
-    const {value, crosshairValues} = this.state;
+    const {value, crosshairValues, hover} = this.state;
     const cols = artistColors();
+    const tickValues = [... new Array(11)].map((d, i) => i * 10);
     const tickStyle = {
       line: {stroke: '#000'},
       ticks: {stroke: '#000'},
       text: {fill: '#000', fontSize:10}
     };
 
-    const preppedData = data.filter(d => d.GROUP === artist && d.REGION === region);
-    const dataAsSeries = preppedData.map(d => {
-      return {x: d.REGION, y:0, interest: d.Interest, date: d.date};
-    });
-    const dataForLines = preppedData.map((d, i) => {
+    const dataForLines = data.filter(d => d.GROUP === artist && d.REGION === region).map((d, i) => {
       return {x: i, y: Number(d.Interest), date: new Date(d.date)};
     });
 
-    const f = this._onNearestX(dataForLines);
+    const avg = dataForLines.reduce((acc, row) => {
+      return {
+        x: region,
+        y: 0,
+        interest: row.y > 0 ? acc.interest + Number(row.y) : acc.interest,
+        count: row.y > 0 ? acc.count + 1 : acc.count
+      };
+    }, {x: '', y: 0, interest: 0, count: 0});
+
+    const move = this._onNearestX(dataForLines);
+
     return (
       <div className='artist-flux-breakdown'>
-        <XYPlot className='artist-breakdown'
-          margin={100}
-          width={400}
-          height={400}
-          xDomain={[region]}
-          xType='ordinal'
-          yType='ordinal'
-          yDomain={0}>
-          <XAxis orientation="bottom" style={tickStyle} hideLine/>
-          <HeatmapSeries
-            className='artist-flux'
-            style={{
-              strokeWidth: 10,
-              stroke: '#eee8d5',
-              rectStyle: {
-                rx: '80',
-                ry: '80',
-                y:'1000'}}}
-            colorType='literal'
-            getColor={d => saturationScale(Number(d.interest), artist)}
-            data={dataAsSeries.filter((d, i) => i % 230 === dateIdx)}
-            onValueMouseOver={v => this.setState({hover: v})}
-            onValueMouseOut={() => this.setState({hover: null})}
-          />
-        </XYPlot>
         <div className='artist-breakdown'>
-        <XYPlot
-          onMouseLeave={this._onMouseLeave}
-          margin={50}
-          width={1000}
-          height={500}>
-          <XAxis
-            className='axis'
-            title='Date'
-            style={tickStyle}
-            tickLabelAngle={-45}
-            tickTotal={70}
-            tickPadding={3}
-            tickFormat={v => dateTicks(dataForLines[v].date)}
-          />
-          <YAxis style={tickStyle} tickTotal={11}/>
-          <HorizontalGridLines values={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}/>
+          <XYPlot onMouseLeave={this._onMouseLeave} margin={50} width={1400} height={500}>
+            <XAxis title='Date' style={tickStyle} tickLabelAngle={-45} tickTotal={70} tickPadding={3}
+              tickFormat={v => dateTicks(dataForLines[v].date)}/>
+            <YAxis style={tickStyle} tickValues={tickValues}/>
+            <HorizontalGridLines values={tickValues} style={{stroke: 'black', opacity:0.4}}/>
 
-          <LineMarkSeries
-            className="artist-breakdown"
-            strokeWidth={2}
-            size={2}
-            opacity={0.8}
-            color={cols(artist)}
-            getNull={d => d.y !== 0}
-            data={dataForLines}
-            onNearestX={f}
-            onChange={() => onChange(value.x)}
-          />
-          <Crosshair
-            values={this.state.crosshairValues}
-            className={'crosshair'}
-            titleFormat={v => `Interest: ${v.y}`}
-            style={{line: {borderStyle: 'solid black'}}}
-          >
-            <div/>
-          </Crosshair>
+            <LineMarkSeries
+              className='artist-breakdown'
+              strokeWidth={2}
+              size={2}
+              opacity={0.8}
+              color={cols(artist)}
+              getNull={d => d.y !== 0}
+              data={dataForLines}
+              onNearestX={move}
+              onChange={d => onChange(d.x)}/>
 
-       </XYPlot>
-      </div>
+            <Crosshair
+              values={this.state.crosshairValues}
+              className='crosshair'
+              titleFormat={(d) => ({title: 'Date', value: new Date(d[0].date).toLocaleDateString()})}
+              itemsFormat={(d) => [{title: 'Interest', value: d[0].y}]}
+              style={{line: {backgroundColor: 'black'}}}/>
+
+            {ANNOTATIONS[artist].map(hint => {
+              return (
+                <Hint value={hint.value} key={hint.value.x * 3 + hint.value.y * 7}>
+                  <div className='custom-hint' style={{backgroundColor: 'black', color:'#eee8d5'}}>
+                    {hint.txt}
+                  </div>
+                </Hint>);
+              })}
+          </XYPlot>
+        </div>
       </div>
     );
   }
 }
-//onValueMouseOver={v => this.setState({value: v})}
-//style={{pointerEvents: highlighting ? 'none' : ''}}
-/*
 
-            onNearestX={index => (
-              this.setState({crosshairValues: dataForLines.filter((d, i) => i === index)}))
-            }
-
-          <Hint
-            value={{x: 10, y: 70}}
-            horizontalAlign={Hint.ALIGN.RIGHT}
-            verticalAlign={Hint.ALIGN.BOTTOM}/>
-*/
+FluxBreakdown.displayName = 'FluxBreakdown';
+export default FluxBreakdown;

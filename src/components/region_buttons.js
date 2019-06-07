@@ -7,7 +7,7 @@ class RegionButtons extends React.Component {
     const cols = artistColors;
     const {region, onChange} = this.props;
     return (
-      <div className="pill-box pad-only-sides">
+      <div className='pill-box pad-only-sides'>
         {REGIONS.map((mode, idx) => {
           return (<div
             className={`artist-selector ${mode === region ? 'selected' : ''}`}

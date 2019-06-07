@@ -264,6 +264,7 @@ http://danielstern.ca/range.css/#/ */
   width: 100%;
   text-align: center;
 }
+
 .flux-artist-breakdown {
   display: inline-block;
 }
@@ -279,4 +280,50 @@ http://danielstern.ca/range.css/#/ */
 .breakdown-div .pill-box .artist-selector.selected  {
   border-bottom: 5px solid #000;
   border-top: 5px solid #000;
+}
+
+.artist-comparison-div {
+  width: 100%;
+  text-align: left;
+}
+
+.penta-radar {
+  display: inline-block;
+}
+
+.grouped-plot {
+  display: inline-block;
+}
+
+.hint {
+    color: #eee8d5 !important;
+    background-color: black !important;
+}
+
+.rv-crosshair__item {
+  color: #eee8d5;
+  background-color: #3a3a48
+}
+.rv-crosshair__item__title {
+  color: #eee8d5;
+  background-color: #3a3a48;
+}
+.rv-crosshair__item__value {
+  color: #eee8d5;
+  background-color: #3a3a48;
+}
+
+.rv-crosshair__title {
+  color: #eee8d5 ;
+  background-color: #3a3a48 ;
+}
+
+.rv-crosshair__title__title {
+  color: #eee8d5;
+  background-color: #3a3a48;
+}
+
+.rv-crosshair__title__value {
+  color: #eee8d5;
+  background-color: #3a3a48;
 }

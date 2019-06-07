@@ -1,7 +1,7 @@
 import {stack, stackOffsetWiggle} from 'd3-shape';
-import {scaleOrdinal, scaleTime} from 'd3-scale';
+import {scaleOrdinal} from 'd3-scale';
 import {hsl} from 'd3-color';
-import {ARTISTS, COLORS, ARTIST_COLORS} from './constants';
+import {ARTIST_COLORS} from './constants';
 
 // THIS IS CODE FROM P1
 export function stackData(data, cols, off) {
@@ -15,13 +15,6 @@ export function artistColors() {
     .range(Object.values(ARTIST_COLORS));
 }
 
-export function dateScale(range) {
-  const maxIdx = Math.abs(new Date(range[1]) - new Date(range[0])) / (1000 * 60 * 60 * 24 * 7)
-  return scaleTime()
-    .domain([new Date(range[0]), new Date(range[1])])
-    .range([0, maxIdx])
-};
-
 //FROM: https://stackoverflow.com/questions/1985260/javascript-array-rotate
 export function rotateArray(array, idx) {
   return array.slice(idx, array.length).concat(array.slice(0, idx));
@@ -34,6 +27,16 @@ export function dateTicks(date) {
 
 export function saturationScale(interest, artist) {
   const c = hsl(ARTIST_COLORS[artist]);
-  c.l = interest/200;
+  c.l = interest/170;
   return c;
+}
+
+export function groupBy(data, accessor) {
+  return data.reduce((acc, row) => {
+    if (!acc[accessor(row)]) {
+      acc[accessor(row)] = [];
+    }
+    acc[accessor(row)].push(row);
+    return acc;
+  }, {});
 }

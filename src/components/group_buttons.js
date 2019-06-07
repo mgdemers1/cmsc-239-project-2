@@ -2,15 +2,15 @@ import React from 'react';
 import {ARTISTS} from '../constants';
 import {artistColors} from '../utils';
 
-class ArtistButtons extends React.Component {
+class GroupButtons extends React.Component {
   render() {
     const cols = artistColors;
-    const {artist, onChange} = this.props;
+    const {artists, onChange} = this.props;
     return (
       <div className='pill-box pad-only-sides'>
         {ARTISTS.map((mode, idx) => {
           return (<div
-            className={`artist-selector ${mode === artist ? artist : ''}`}
+            className={`artist-selector ${artists.has(mode) ? mode : ''}`}
             onClick={() => onChange(mode)}
             key={idx}>{mode}</div>);
         })}
@@ -19,5 +19,5 @@ class ArtistButtons extends React.Component {
   }
 }
 
-ArtistButtons.displayName = 'ArtistButtons';
-export default ArtistButtons;
+GroupButtons.displayName = 'GroupButtons';
+export default GroupButtons;

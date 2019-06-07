@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {stack, stackOffsetWiggle} from 'd3-shape';
-import {hsl} from 'd3-color';
 import {XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries} from 'react-vis';
-import {stackData, artistColors, rotateArray, dateTicks, saturationScale} from '../utils';
-import {ARTISTS, REGIONS, ARTIST_COLORS} from '../constants';
+import {artistColors, saturationScale} from '../utils';
+import {REGIONS} from '../constants';
 
-export default class ArtistFlux extends Component {
+class ArtistFlux extends Component {
   constructor() {
     super();
     this.state = {
@@ -23,17 +21,10 @@ export default class ArtistFlux extends Component {
       text: {fill: '#000', fontSize:30}
     };
 
-    const preppedData = data.filter(d => d.GROUP === artist && d.REGION !== 'GLOBAL');
-    const dataAsSeries = preppedData.map(d => {
-      return {x: d.REGION/*.findIndex(v => v === d.REGION)*/, y:0, interest: d.Interest, date: d.date};
+    const dataForSeries = data.filter(d => d.GROUP === artist && d.REGION !== 'GLOBAL').map(d => {
+      return {x: d.REGION, y:0, interest: d.Interest, date: d.date};
     });
-    // TODO: Date Slider
-    // TODO: More Artist Buttons
-    // TODO: Country Labels
-    //var c = hsl(ARTIST_COLORS[artist]);
-    console.log(dateIdx)
 
-    //console.log(REGIONS.slice(1, REGIONS.length))
     return (
       <div className='artist-flux'>
         <XYPlot
@@ -41,10 +32,10 @@ export default class ArtistFlux extends Component {
           width={1200}
           height={500}
           xDomain={REGIONS.slice(1, REGIONS.length)}
-          xType="ordinal"
+          xType='ordinal'
           yType='ordinal'
           yDomain={0}>
-          <XAxis orientation="bottom" style={tickStyle} hideLine/>
+          <XAxis orientation='bottom' style={tickStyle} hideLine/>
           <HeatmapSeries
             className='artist-flux'
             style={{
@@ -56,7 +47,7 @@ export default class ArtistFlux extends Component {
                 y:'1000'}}}
             colorType='literal'
             getColor={d => saturationScale(Number(d.interest), artist)}
-            data={dataAsSeries.filter((d, i) => i % 230 === dateIdx)}
+            data={dataForSeries.filter((d, i) => i % 230 === dateIdx)}
             onValueMouseOver={v => this.setState({hover: v})}
             onValueMouseOut={() => this.setState({hover: null})}
           />
@@ -64,8 +55,8 @@ export default class ArtistFlux extends Component {
             <LabelSeries
               style={{pointerEvents: 'none', fontSize: 30, fontWeight:'bold', fill:'#eee8d5'}}
               data={[hover]}
-              labelAnchorX="middle"
-              labelAnchorY="baseline"
+              labelAnchorX='middle'
+              labelAnchorY='baseline'
               getLabel={d => `${d.interest}`}
               />}
         </XYPlot>
@@ -73,3 +64,6 @@ export default class ArtistFlux extends Component {
     );
   }
 }
+
+ArtistFlux.displayName = 'ArtistFlux';
+export default ArtistFlux;
